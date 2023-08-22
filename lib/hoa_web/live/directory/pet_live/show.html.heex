@@ -1,0 +1,30 @@
+<.header>
+  Pet <%= @pet.id %>
+  <:subtitle>This is a pet record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/pets/#{@pet}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit pet</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @pet.name %></:item>
+  <:item title="Type"><%= @pet.type %></:item>
+  <:item title="Breed"><%= @pet.breed %></:item>
+  <:item title="Weight (lbs)"><%= @pet.weight %></:item>
+  <:item title="Date of Birth (used to display age)"><%= @pet.dob %></:item>
+</.list>
+
+<.back navigate={~p"/pets"}>Back to pets</.back>
+
+<.modal :if={@live_action == :edit} id="pet-modal" show on_cancel={JS.patch(~p"/pets/#{@pet}")}>
+  <.live_component
+    module={HoaWeb.PetLive.FormComponent}
+    id={@pet.id}
+    title={@page_title}
+    action={@live_action}
+    pet={@pet}
+    patch={~p"/pets/#{@pet}"}
+  />
+</.modal>

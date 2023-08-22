@@ -1,0 +1,38 @@
+<.header>
+  Home <%= @home.id %>
+  <:subtitle>This is a home record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/homes/#{@home}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit home</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Home street address"><%= @home.home_name %></:item>
+  <:item title="Lot number"><%= @home.lot_number %></:item>
+  <:item title="Home phone"><%= @home.home_phone %></:item>
+  <:item title="Home phone public"><%= @home.home_phone_public %></:item>
+  <:item title="Rental"><%= @home.rental %></:item>
+  <h3>Mailing Address</h3>
+  <:item title="Addressee"><%= @home.addressee %></:item>
+  <:item title="Street1"><%= @home.street1 %></:item>
+  <:item title="Street2"><%= @home.street2 %></:item>
+  <:item title="City"><%= @home.city %></:item>
+  <:item title="State"><%= @home.state_code %></:item>
+  <:item title="Zip"><%= @home.postal_code %></:item>
+  <:item title="Country"><%= @home.country_code %></:item>
+</.list>
+
+<.back navigate={~p"/homes"}>Back to homes</.back>
+
+<.modal :if={@live_action == :edit} id="home-modal" show on_cancel={JS.patch(~p"/homes/#{@home}")}>
+  <.live_component
+    module={HoaWeb.HomeLive.FormComponent}
+    id={@home.id}
+    title={@page_title}
+    action={@live_action}
+    home={@home}
+    patch={~p"/homes/#{@home}"}
+  />
+</.modal>

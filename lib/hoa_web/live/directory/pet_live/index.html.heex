@@ -1,0 +1,43 @@
+<.header>
+  Listing Pets
+  <:actions>
+    <.link patch={~p"/pets/new"}>
+      <.button>New Pet</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="pets"
+  rows={@streams.pets}
+  row_click={fn {_id, pet} -> JS.navigate(~p"/pets/#{pet}") end}
+>
+  <:col :let={{_id, pet}} label="Name"><%= pet.name %></:col>
+  <:col :let={{_id, pet}} label="Type"><%= pet.type %></:col>
+  <:col :let={{_id, pet}} label="Breed"><%= pet.breed %></:col>
+  <:action :let={{_id, pet}}>
+    <div class="sr-only">
+      <.link navigate={~p"/pets/#{pet}"}>Show</.link>
+    </div>
+    <.link patch={~p"/pets/#{pet}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, pet}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: pet.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="pet-modal" show on_cancel={JS.patch(~p"/pets")}>
+  <.live_component
+    module={HoaWeb.PetLive.FormComponent}
+    id={@pet.id || :new}
+    title={@page_title}
+    action={@live_action}
+    pet={@pet}
+    patch={~p"/pets"}
+  />
+</.modal>

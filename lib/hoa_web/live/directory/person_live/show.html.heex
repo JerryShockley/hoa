@@ -1,0 +1,36 @@
+<.header>
+  Person <%= @person.id %>
+  <:subtitle>This is a person record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/people/#{@person}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit person</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="First name"><%= @person.first_name %></:item>
+  <:item title="Last name"><%= @person.last_name %></:item>
+  <:item title="Mobile phone"><%= @person.mobile_phone %></:item>
+  <:item title="Work phone"><%= @person.work_phone %></:item>
+  <:item title="Email"><%= @person.email %></:item>
+  <:item title="Mobile phone public"><%= @person.mobile_phone_public %></:item>
+  <:item title="Work phone public"><%= @person.work_phone_public %></:item>
+  <:item title="Email public"><%= @person.email_public %></:item>
+  <:item title="Bio"><%= @person.bio %></:item>
+  <:item title="Dob"><%= @person.dob %></:item>
+  <:item title="Home relationship"><%= @person.home_relationship %></:item>
+</.list>
+
+<.back navigate={~p"/people"}>Back to people</.back>
+
+<.modal :if={@live_action == :edit} id="person-modal" show on_cancel={JS.patch(~p"/people/#{@person}")}>
+  <.live_component
+    module={HoaWeb.PersonLive.FormComponent}
+    id={@person.id}
+    title={@page_title}
+    action={@live_action}
+    person={@person}
+    patch={~p"/people/#{@person}"}
+  />
+</.modal>
