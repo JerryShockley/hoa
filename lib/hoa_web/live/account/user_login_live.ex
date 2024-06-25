@@ -15,8 +15,7 @@ defmodule HoaWeb.UserLoginLive do
         </:subtitle>
       </.header>
       <div class="bg-yellow-50 px-10">
-        <.simple_form
-          for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
+        <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
           <.input class="bg-yellow-50" field={@form[:email]} type="email" label="Email" required />
           <.input field={@form[:password]} type="password" label="Password" required />
 

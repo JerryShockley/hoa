@@ -10,8 +10,9 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"elixir-lsp.elixir-ls",
-				"jamilabreu.vscode-phoenix-snippets"
+				// "elixir-lsp.elixir-ls",
+				"jamilabreu.vscode-phoenix-snippets",
+				"JakeBecker.elixir-ls"
 			]
 		}
 	},

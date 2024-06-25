@@ -33,7 +33,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="person-modal" show on_cancel={JS.patch(~p"/people")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="person-modal"
+  show
+  on_cancel={JS.patch(~p"/people")}
+>
   <.live_component
     module={HoaWeb.PersonLive.FormComponent}
     id={@person.id || :new}

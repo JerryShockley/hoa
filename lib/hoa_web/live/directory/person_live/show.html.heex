@@ -1,30 +1,40 @@
 <.header>
-  Person <%= @person.id %>
-  <:subtitle>This is a person record from your database.</:subtitle>
+  Person Detail
   <:actions>
     <.link patch={~p"/people/#{@person}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit person</.button>
+      <.button>Edit details</.button>
     </.link>
   </:actions>
 </.header>
+  <%= if @person.image_path != nil do %>
+    <img src={~p"/images/avatars/#{@person.image_path}"} width="200" height="200">
+  <% end %>
 
 <.list>
-  <:item title="First name"><%= @person.first_name %></:item>
-  <:item title="Last name"><%= @person.last_name %></:item>
-  <:item title="Mobile phone"><%= @person.mobile_phone %></:item>
-  <:item title="Work phone"><%= @person.work_phone %></:item>
+  <:item title="Name"><%= @full_name %></:item>
+  <:item title="Home"><%= @home_name %></:item>
+  <:item title="Mobile phone"><%= @phones.mobile %></:item>
+  <:item title="Work phone"><%= @phones.work %></:item>
+  <:item title="Home phone"><%= @phones.home %></:item>
   <:item title="Email"><%= @person.email %></:item>
-  <:item title="Mobile phone public"><%= @person.mobile_phone_public %></:item>
+  <%!-- <:item title="Mobile phone public"><%= @person.mobile_phone_public %></:item>
   <:item title="Work phone public"><%= @person.work_phone_public %></:item>
-  <:item title="Email public"><%= @person.email_public %></:item>
-  <:item title="Bio"><%= @person.bio %></:item>
-  <:item title="Dob"><%= @person.dob %></:item>
+  <:item title="Home phone public"><%= @person.home_phone_public %></:item> --%>
+  <%!-- <:item title="Email public"><%= @person.email_public %></:item> --%>
+  <:item title="Age"><%= @age %></:item>
   <:item title="Home relationship"><%= @person.home_relationship %></:item>
+  <:item title="Mailing Address"><pre><%= @mailing_address %></pre></:item>
+  <:item title="Bio"><%= @person.bio %></:item>
 </.list>
 
 <.back navigate={~p"/people"}>Back to people</.back>
 
-<.modal :if={@live_action == :edit} id="person-modal" show on_cancel={JS.patch(~p"/people/#{@person}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="person-modal"
+  show
+  on_cancel={JS.patch(~p"/people/#{@person}")}
+>
   <.live_component
     module={HoaWeb.PersonLive.FormComponent}
     id={@person.id}

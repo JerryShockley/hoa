@@ -1,6 +1,8 @@
 /_build
 /cover
 /deps
+/priv/static/images/avatars
+/priv/static/images/pet_avatars
 /doc
 /.fetch
 erl_crash.dump

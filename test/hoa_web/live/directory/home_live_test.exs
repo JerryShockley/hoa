@@ -6,22 +6,24 @@ defmodule HoaWeb.HomeLiveTest do
 
   setup :register_and_log_in_user
 
-  @create_attrs %{home_name: "3812 NW 74th Ave",
-    lot_number: "some lot_number", home_phone: "9906551234",
-    home_phone_public: true, rental: true, addressee: "John Smith",
-    street1: "345 Main Street", city: "Charlotte", state_code: "NC",
-    postal_code: "28104"}
-  @update_attrs %{home_name: "3814 NW 74th Ave",
-    lot_number: "some lot_number", home_phone: "2906551234",
-    home_phone_public: true, rental: true, addressee: "Johnathon Smith",
-    street1: "3459 Main Street", city: "Charlotte", state_code: "NC",
-    postal_code: "28105"}
-  @invalid_attrs %{home_name: nil, lot_number: nil, home_phone: nil,
-    home_phone_public: false, rental: false, addressee: nil, street1: nil,
-    city: nil, state_code: nil, postal_code: nil, country_code: nil}
+  @create_attrs %{
+    home_name: "3812 NW 74th Ave",
+    lot_number: "some lot_number",
+    rental: true,
+  }
+  @update_attrs %{
+    home_name: "3814 NW 74th Ave",
+    lot_number: "some lot_number",
+    rental: true,
+  }
+  @invalid_attrs %{
+    home_name: nil,
+    lot_number: nil,
+    rental: false,
+  }
 
   defp create_home(_) do
-    home = home_fixture()
+    {:ok, home} = home_fixture()
     %{home: home}
   end
 

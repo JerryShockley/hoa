@@ -3,11 +3,10 @@ defmodule Hoa.Directory do
   The Directory context.
   """
 
-  import Ecto.Query, warn: false
+  # import Ecto.Query
   alias Hoa.Repo
 
-  alias Hoa.Directory.Home
-
+  alias Hoa.Directory.{Home, Person, Pet}
   @doc """
   Returns the list of homes.
 
@@ -17,10 +16,11 @@ defmodule Hoa.Directory do
       [%Home{}, ...]
 
   """
-  def list_homes do
+  def list_homes() do
     Repo.all(Home)
   end
 
+  @spec get_home!(any(), boolean()) :: any()
   @doc """
   Gets a single home.
 
@@ -35,7 +35,25 @@ defmodule Hoa.Directory do
       ** (Ecto.NoResultsError)
 
   """
-  def get_home!(id), do: Repo.get!(Home, id)
+  def get_home!(id, with_children \\ false)
+
+  def get_home!(id, true) do
+    Home
+    |> Home.with_pets()
+    |> Home.with_people()
+    |> Home.where_id(id)
+    # |> Home.select_detail()
+    |> Repo.one!()
+
+  end
+
+
+  def get_home!(id, false) do
+    Home
+    |> Home.where_id(id)
+    |> Repo.one!()
+
+  end
 
   @doc """
   Creates a home.
@@ -51,8 +69,8 @@ defmodule Hoa.Directory do
   """
   def create_home(attrs \\ %{}) do
     %Home{}
-    |> Home.changeset(attrs)
-    |> Repo.insert()
+      |> Home.changeset(attrs)
+      |> Repo.insert()
   end
 
   @doc """
@@ -113,8 +131,9 @@ defmodule Hoa.Directory do
       [%Person{}, ...]
 
   """
-  def list_people do
-    Repo.all(Person)
+  def list_people() do
+    Person.all()
+    |> Repo.all
   end
 
   @doc """
@@ -131,8 +150,17 @@ defmodule Hoa.Directory do
       ** (Ecto.NoResultsError)
 
   """
-  def get_person!(id), do: Repo.get!(Person, id)
+  def get_person!(id) do
+    Person
+    |> Person.with_homes()
+    |> Person.where_id(id)
+    |> Repo.one!()
+  end
 
+  @spec create_person(
+          :invalid
+          | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
+        ) :: any()
   @doc """
   Creates a person.
 
@@ -227,7 +255,11 @@ defmodule Hoa.Directory do
       ** (Ecto.NoResultsError)
 
   """
-  def get_pet!(id), do: Repo.get!(Pet, id)
+  def get_pet!(id) do
+    Pet
+    |> Pet.where_id(id)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a pet.
@@ -293,5 +325,4 @@ defmodule Hoa.Directory do
   def change_pet(%Pet{} = pet, attrs \\ %{}) do
     Pet.changeset(pet, attrs)
   end
-
 end

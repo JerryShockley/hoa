@@ -52,7 +52,8 @@ defmodule Hoa.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:tzdata, "~> 1.1"},
-      {:nimble_csv, "~> 1.2"}
+      {:nimble_csv, "~> 1.2", only: :dev},
+      {:faker, "~> 0.17", only: [:test, :dev]}
     ]
   end
 
@@ -65,7 +66,9 @@ defmodule Hoa.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.seed_setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
+      "ecto.seed_reset": ["ecto.drop", "ecto.seed_setup"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],

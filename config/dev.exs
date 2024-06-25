@@ -58,7 +58,7 @@ config :hoa, HoaWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/hoa_web/(controllers|live|components)/.*(ex|heex)$",
+      ~r"lib/hoa_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 

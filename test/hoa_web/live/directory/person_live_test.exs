@@ -6,24 +6,53 @@ defmodule HoaWeb.PersonLiveTest do
 
   setup :register_and_log_in_user
 
-  @create_attrs %{first_name: "some first_name", last_name: "some last_name",
-    mobile_phone: "3345679100", email: "some@email.com", mobile_phone_public: true,
-    email_public: true, bio: "some bio", dob: "2023-07-28", nickname: "some nick_name",
-    middle_name: "some middle_name", home_relationship: :owner,
-    work_phone: "922-655-0103", work_phone_public: true}
-  @update_attrs %{first_name: "some updated first_name",
-      last_name: "some updated last_name", mobile_phone: "(405)777-1234)",
-      email: "updated_some@email.com", mobile_phone_public: false, email_public: false,
-      bio: "some updated bio", dob: "2023-07-29", home_relationship: :renter,
-      nickname: "some updated nick_name", middle_name: "some updated middle_name",
-      work_phone: "213-045-2389"}
-  @invalid_attrs %{first_name: nil, last_name: nil, mobile_phone: "9228765432",
-      email: "!3f@bad.com", mobile_phone_public: false, email_public: false, bio: nil,
-      dob: "2050-01-01", home_relationship: :owner, nickname: nil,
-      middle_name: nil, work_phone: "sadgfasdgasd", work_phone_public: false}
+  @create_attrs %{
+    first_name: "some first_name",
+    last_name: "some last_name",
+    mobile_phone: "3345679100",
+    email: "some@email.com",
+    mobile_phone_public: true,
+    email_public: true,
+    bio: "some bio",
+    dob: "2023-07-28",
+    nickname: "some nick_name",
+    middle_name: "some middle_name",
+    home_relationship: :owner,
+    work_phone: "922-655-0103",
+    work_phone_public: true
+  }
+  @update_attrs %{
+    first_name: "some updated first_name",
+    last_name: "some updated last_name",
+    mobile_phone: "(405)777-1234)",
+    email: "updated_some@email.com",
+    mobile_phone_public: false,
+    email_public: false,
+    bio: "some updated bio",
+    dob: "2023-07-29",
+    home_relationship: :renter,
+    nickname: "some updated nick_name",
+    middle_name: "some updated middle_name",
+    work_phone: "213-045-2389"
+  }
+  @invalid_attrs %{
+    first_name: nil,
+    last_name: nil,
+    mobile_phone: "9228765432",
+    email: "!3f@bad.com",
+    mobile_phone_public: false,
+    email_public: false,
+    bio: nil,
+    dob: "2050-01-01",
+    home_relationship: :owner,
+    nickname: nil,
+    middle_name: nil,
+    work_phone: "sadgfasdgasd",
+    work_phone_public: false
+  }
 
   defp create_person(_) do
-    person = person_fixture()
+    {:ok, person} = person_fixture()
     %{person: person}
   end
 
@@ -102,12 +131,12 @@ defmodule HoaWeb.PersonLiveTest do
     end
 
     test "updates person within modal", %{conn: conn, person: person} do
-      {:ok, show_live, _html} = live(conn, ~p"/people/#{person}")
+      {:ok, show_live, _html} = live(conn, ~p"/people/#{person.id}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Person"
 
-      assert_patch(show_live, ~p"/people/#{person}/show/edit")
+      assert_patch(show_live, ~p"/people/#{person.id}/show/edit")
 
       assert show_live
              |> form("#person-form", person: @invalid_attrs)

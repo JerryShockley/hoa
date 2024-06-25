@@ -6,16 +6,24 @@ defmodule HoaWeb.PetLiveTest do
 
   setup :register_and_log_in_user
 
-  @create_attrs %{name: "some name", type: :dog, breed: "some breed",
-    weight: 23, dob: "2023-01-01"}
-  @update_attrs %{name: "some updated name", type: :cat,
+  @create_attrs %{
+    name: "some name",
+    type: :dog,
+    breed: "some breed",
+    weight: 23,
+    dob: "2023-01-01"
+  }
+  @update_attrs %{
+    name: "some updated name",
+    type: :cat,
     breed: "some updated breed",
-    weight: 13, dob: "2023-01-02"}
-  @invalid_attrs %{name: nil, type: nil, breed: nil, dob: nil,
-    weight: nil}
+    weight: 13,
+    dob: "2023-01-02"
+  }
+  @invalid_attrs %{name: nil, type: nil, breed: nil, dob: nil, weight: nil}
 
   defp create_pet(_) do
-    pet = pet_fixture()
+    {:ok, pet} = pet_fixture()
     %{pet: pet}
   end
 

@@ -22,29 +22,29 @@ defmodule HoaWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{HoaWeb.UserAuth, :ensure_authenticated}] do
-        live "/users/settings", UserSettingsLive, :edit
-        live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/users/settings", UserSettingsLive, :edit
+      live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-        live "/homes", HomeLive.Index, :index
-        live "/homes/new", HomeLive.Index, :new
-        live "/homes/:id/edit", HomeLive.Index, :edit
+      live "/homes", HomeLive.Index, :index
+      live "/homes/new", HomeLive.Index, :new
+      live "/homes/:id/edit", HomeLive.Index, :edit
 
-        live "/homes/:id", HomeLive.Show, :show
-        live "/homes/:id/show/edit", HomeLive.Show, :edit
+      live "/homes/:id", HomeLive.Show, :show
+      live "/homes/:id/show/edit", HomeLive.Show, :edit
 
-        live "/people", PersonLive.Index, :index
-        live "/people/new", PersonLive.Index, :new
-        live "/people/:id/edit", PersonLive.Index, :edit
+      live "/people", PersonLive.Index, :index
+      live "/people/new", PersonLive.Index, :new
+      live "/people/:id/edit", PersonLive.Index, :edit
 
-        live "/people/:id", PersonLive.Show, :show
-        live "/people/:id/show/edit", PersonLive.Show, :edit
+      live "/people/:id", PersonLive.Show, :show
+      live "/people/:id/show/edit", PersonLive.Show, :edit
 
-        live "/pets", PetLive.Index, :index
-        live "/pets/new", PetLive.Index, :new
-        live "/pets/:id/edit", PetLive.Index, :edit
+      live "/pets", PetLive.Index, :index
+      live "/pets/new", PetLive.Index, :new
+      live "/pets/:id/edit", PetLive.Index, :edit
 
-        live "/pets/:id", PetLive.Show, :show
-        live "/pets/:id/show/edit", PetLive.Show, :edit
+      live "/pets/:id", PetLive.Show, :show
+      live "/pets/:id/show/edit", PetLive.Show, :edit
     end
   end
 

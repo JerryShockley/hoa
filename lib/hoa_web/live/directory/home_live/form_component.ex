@@ -21,17 +21,7 @@ defmodule HoaWeb.HomeLive.FormComponent do
       >
         <.input field={@form[:home_name]} type="text" label="Home house number and street" />
         <.input field={@form[:lot_number]} type="text" label="Lot number" />
-        <.input field={@form[:home_phone]} type="text" label="Home phone" />
-        <.input field={@form[:home_phone_public]} type="checkbox" label="Home phone public" />
         <.input field={@form[:rental]} type="checkbox" label="Rental" />
-        <h3>Mailing Address</h3>
-        <.input field={@form[:addressee]} type="text" label="Addressee" />
-        <.input field={@form[:street1]} type="text" label="Street1" />
-        <.input field={@form[:street2]} type="text" label="Street2" />
-        <.input field={@form[:city]} type="text" label="City" />
-        <.input field={@form[:state_code]} type="text" label="State" />
-        <.input field={@form[:postal_code]} type="text" label="Zip" />
-        <.input field={@form[:country_code]} type="text" label="Country" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Home</.button>
         </:actions>

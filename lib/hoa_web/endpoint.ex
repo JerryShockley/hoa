@@ -21,7 +21,8 @@ defmodule HoaWeb.Endpoint do
     at: "/",
     from: :hoa,
     gzip: false,
-    only: HoaWeb.static_paths()
+    only: ~w(images assets fonts favicon.ico robots.txt)
+    # only: HoaWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
