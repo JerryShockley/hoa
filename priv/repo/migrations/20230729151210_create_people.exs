@@ -18,7 +18,6 @@ defmodule Hoa.Repo.Migrations.CreatePeople do
       add :email_public, :boolean, default: false, null: false
       add :bio, :text
       add :dob, :date
-      add :home_relationship, :string, null: false
       add :image_path, :string
       add :mail_addressee, :string
       add :street1, :string
