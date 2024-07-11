@@ -5,7 +5,7 @@ defmodule Hoa.Directory do
 
   # import Ecto.Query
   alias Hoa.Repo
-
+  # alias Hoa.Directory
   alias Hoa.Directory.{Home, Person, Pet}
   @doc """
   Returns the list of homes.
@@ -17,10 +17,11 @@ defmodule Hoa.Directory do
 
   """
   def list_homes() do
-    Repo.all(Home)
+    Home
+    |> Home.Query.all()
+    |> Repo.all()
   end
 
-  @spec get_home!(any(), boolean()) :: any()
   @doc """
   Gets a single home.
 
@@ -35,24 +36,10 @@ defmodule Hoa.Directory do
       ** (Ecto.NoResultsError)
 
   """
-  def get_home!(id, with_children \\ false)
-
-  def get_home!(id, true) do
+  def get_home!(id) do
     Home
-    |> Home.with_pets()
-    |> Home.with_people()
-    |> Home.where_id(id)
-    # |> Home.select_detail()
+    |> Home.Query.where_id(id)
     |> Repo.one!()
-
-  end
-
-
-  def get_home!(id, false) do
-    Home
-    |> Home.where_id(id)
-    |> Repo.one!()
-
   end
 
   @doc """
@@ -132,7 +119,8 @@ defmodule Hoa.Directory do
 
   """
   def list_people() do
-    Person.all()
+    Person
+    |> Person.Query.all()
     |> Repo.all
   end
 
@@ -152,8 +140,7 @@ defmodule Hoa.Directory do
   """
   def get_person!(id) do
     Person
-    |> Person.with_homes()
-    |> Person.where_id(id)
+    |> Person.Query.where_id(id)
     |> Repo.one!()
   end
 
@@ -238,7 +225,9 @@ defmodule Hoa.Directory do
 
   """
   def list_pets do
-    Repo.all(Pet)
+    Pet
+    |> Pet.Query.all()
+    |> Repo.all()
   end
 
   @doc """
@@ -257,7 +246,7 @@ defmodule Hoa.Directory do
   """
   def get_pet!(id) do
     Pet
-    |> Pet.where_id(id)
+    |> Pet.Query.where_id(id)
     |> Repo.one!()
   end
 
