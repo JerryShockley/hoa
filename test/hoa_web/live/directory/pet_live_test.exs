@@ -10,6 +10,7 @@ defmodule HoaWeb.PetLiveTest do
     name: "some name",
     type: :dog,
     breed: "some breed",
+    coloring: "brown",
     weight: 23,
     dob: "2023-01-01"
   }
@@ -17,13 +18,14 @@ defmodule HoaWeb.PetLiveTest do
     name: "some updated name",
     type: :cat,
     breed: "some updated breed",
+    coloring: "white",
     weight: 13,
     dob: "2023-01-02"
   }
   @invalid_attrs %{name: nil, type: nil, breed: nil, dob: nil, weight: nil}
 
   defp create_pet(_) do
-    {:ok, pet} = pet_fixture()
+    pet = pet_fixture_with_nested()
     %{pet: pet}
   end
 

@@ -3,23 +3,43 @@ defmodule Hoa.DirectoryFixtures do
   This module defines test helpers for creating
   entities via the `Directory` context.
   """
+  import Ecto.Changeset
+  alias Hoa.Repo
+  alias Hoa.Directory.{Home, Person, Pet}
 
-  alias Hoa.Directory
+  @pet_coloring [
+    "Auburn", "black", "white", "tan", "copper", "gold", "brown",
+    "black and white", "black and tan", "black, tan, and white"
+   ]
 
   def home_map_with_nested(params \\ %{}) do
-    pets = for _i <- 0..random_pet_cnt(), do: pet_map()
-    people = for _i <- 0..2, do: person_map()
-
     home_map()
     |> Map.merge(params)
-    |> Map.put(:people, people)
-    |> Map.put(:pets, pets)
+    |> Map.put(:people, random_people_map())
+    |> Map.put(:pets, random_pet_map())
   end
 
+  defp random_pet_map do
+    for _i <- 0..random_pet_cnt() do
+      pet_map()
+    end
+  end
+
+  defp random_people_map do
+    for _i <- 0..2 do
+      person_map()
+    end
+  end
+
+
   def home_fixture_with_nested(params \\ %{}) do
-    home_map_with_nested()
-    |> Map.merge(params)
-    |> Directory.create_home()
+    %Home{}
+    |> cast(home_map_with_nested(), Home.fields(:all))
+    |> cast(params, Home.fields(:all))
+    |> cast_assoc(:people)
+    |> cast_assoc(:pets)
+    |> Repo.insert!
+
   end
 
   def home_map(params \\ %{}) do
@@ -40,9 +60,10 @@ defmodule Hoa.DirectoryFixtures do
   """
 
   def home_fixture(params \\ %{}) do
-      home_map()
-      |> Map.merge(params)
-      |> Directory.create_home()
+      %Home{}
+      |> cast(home_map(), Home.fields(:all))
+      |> cast(params, Home.fields(:all))
+      |> Repo.insert!
   end
 
   def person_map(params \\ %{}) do
@@ -81,6 +102,12 @@ defmodule Hoa.DirectoryFixtures do
 
   end
 
+  def person_map_with_nested(params \\ %{}) do
+    person_map()
+    |> Map.merge(params)
+    |> Map.put(:homes, [home_map()])
+  end
+
   def person_keys() do
     Map.keys(person_map())
   end
@@ -89,10 +116,18 @@ defmodule Hoa.DirectoryFixtures do
   Generate a person.
   """
   def person_fixture(params \\ %{}) do
-      person_map()
-      |> Map.put(:homes, [home_map()])
-      |> Map.merge(params)
-      |> Directory.create_person()
+      %Person{}
+      |> cast(person_map(), Person.fields(:all))
+      |> cast(params, Person.fields(:all))
+      |> Repo.insert!
+  end
+
+  def person_fixture_with_nested(params \\ %{}) do
+      %Person{}
+      |> cast(person_map_with_nested(), Person.fields(:all))
+      |> cast(params, Person.fields(:all))
+      |> cast_assoc(:homes)
+      |> Repo.insert!
   end
 
   def pet_map(params \\ %{}) do
@@ -100,6 +135,7 @@ defmodule Hoa.DirectoryFixtures do
       name: Faker.Dog.PtBr.name(),
       type: :dog,
       breed: Faker.Dog.PtBr.breed(),
+      coloring: Enum.random(@pet_coloring),
       dob: Faker.Date.date_of_birth(1..17),
       weight: Faker.random_between(6, 75),
       image_path: random_pet_avatar_image()
@@ -109,8 +145,8 @@ defmodule Hoa.DirectoryFixtures do
 
   def pet_map_with_nested(params \\ %{}) do
     pet_map()
-    |> Map.merge(home_map())
     |> Map.merge(params)
+    |> Map.put(:home, home_map())
   end
 
   def pet_keys() do
@@ -121,15 +157,18 @@ defmodule Hoa.DirectoryFixtures do
   Generate a pet.
   """
   def pet_fixture(params \\ %{}) do
-      pet_map()
-      |> Map.merge(params)
-      |> Directory.create_pet()
+     %Pet{}
+      |> cast(pet_map(), Pet.fields(:all))
+      |> cast(params, Pet.fields(:all))
+      |> Repo.insert!
   end
 
   def pet_fixture_with_nested(params \\ %{}) do
-      pet_map()
-      |> Map.merge(params)
-      |> Directory.create_pet()
+    %Pet{}
+    |> cast(pet_map_with_nested(), Pet.fields(:all))
+    |> cast(params, Pet.fields(:all))
+    |> cast_assoc(:home)
+    |> Repo.insert!
   end
 
   defp random_email(lname, fname) do

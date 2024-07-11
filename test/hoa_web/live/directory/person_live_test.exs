@@ -52,7 +52,7 @@ defmodule HoaWeb.PersonLiveTest do
   }
 
   defp create_person(_) do
-    {:ok, person} = person_fixture()
+    person = person_fixture_with_nested()
     %{person: person}
   end
 
@@ -126,8 +126,10 @@ defmodule HoaWeb.PersonLiveTest do
     test "displays person", %{conn: conn, person: person} do
       {:ok, _show_live, html} = live(conn, ~p"/people/#{person}")
 
-      assert html =~ "Show Person"
+      # assert_navigation
+      assert html =~ "Person Detail"
       assert html =~ person.first_name
+
     end
 
     test "updates person within modal", %{conn: conn, person: person} do

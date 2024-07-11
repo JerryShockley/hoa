@@ -23,7 +23,7 @@ defmodule HoaWeb.HomeLiveTest do
   }
 
   defp create_home(_) do
-    {:ok, home} = home_fixture()
+    home = home_fixture_with_nested()
     %{home: home}
   end
 
