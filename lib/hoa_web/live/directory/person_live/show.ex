@@ -19,15 +19,55 @@ defmodule HoaWeb.PersonLive.Show do
      |> assign(:age, calculate_age(person.dob))
      |> assign(:full_name, first_and_last_name(person))
      |> assign(:phones, format_phones(person))
-     |> assign(:home_name, format_home_names(person.homes))
+     |> assign_home_variables(person)
      |> assign(:mailing_address, format_mailing_address(person))
     }
   end
 
-
-
   defp page_title(:show), do: "Show Person"
   defp page_title(:edit), do: "Edit Person"
+
+  defp assign_home_variables(socket, person) do
+    case determine_home_types(person) do
+      {:primary_home} ->
+        socket
+        |> assign(:primary_home, hd(person.homes))
+        |> assign(:rental_homes, nil)
+      {:primary_and_rental, primary_home, rental_homes} ->
+        socket
+        |> assign(:primary_home, primary_home)
+        |> assign(:rental_homes, rental_homes)
+      {:rentals} ->
+        socket
+        |> assign(:primary_home, nil)
+        |> assign(:rental_homes, person.homes)
+      _ ->
+        socket
+        |> assign(:primary_home, nil)
+        |> assign(:rental_homes, nil)
+    end
+  end
+  # Assumption: Only owners can have more than 1 home.
+  defp determine_home_types(%Person{home_relationship: :owner} = person) do
+    case Enum.count(person.homes) do
+      0 -> {:error, "Person not linked to a Home: #{person.first_name} /
+             #{person.last_name} ID: #{Integer.to_string(person.id)}"}
+      1 -> {:primary_home}
+      _ ->
+         # Assumption: There shouldn't be more than one non-rental home per owner
+         primary_home = Enum.find(person.homes, nil, &(&1.rental === false))
+         if primary_home === nil do
+           {:rentals}
+         else
+           phome = hd(primary_home)
+           {:primary_and_rental, phome, Enum.reject(person.homes,
+             &(&1.id === phome.id))}
+         end
+        end
+    end
+
+  defp determine_home_types(%Person{} = _person), do: {:primary_home}
+
   defp calculate_age(dob) do
     age_in_days = Date.diff(Date.utc_today(), dob)
     div(age_in_days, 365)
@@ -58,12 +98,16 @@ defmodule HoaWeb.PersonLive.Show do
     "#{create_addressee_name(person)}\n#{street1}\n#{street2}\n#{city}, #{state} #{zip}\n#{country}"
   end
 
-  defp format_home_names(nil), do: nil
-  defp format_home_names(home_list) do
-    home_list
-    |> Enum.reduce([], fn h, acc -> acc ++ [h.home_name] end)
-    |> Enum.join(",\n")
-  end
+  # defp format_home_names(nil), do: nil
+  # defp new_view_home_list(home_list) do
+  #   home_list
+  #   |> Enum.reduce([], fn h, acc -> acc ++ new_view_homemap(h) end)
+  # end
+  # defp new_view_homemap(%Home{} = home) do
+  #   %{}
+  #   |> Map.put(:home_name, home.home_name)
+  #   |> Map.put(:home_id, home.id)
+  # end
   defp create_addressee_name(%Person{mail_addressee: nil,
          first_name: first, last_name: last}) do
     "#{first} #{last}"

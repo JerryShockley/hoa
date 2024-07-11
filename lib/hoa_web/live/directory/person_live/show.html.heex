@@ -12,7 +12,18 @@
 
 <.list>
   <:item title="Name"><%= @full_name %></:item>
-  <:item title="Home"><%= @home_name %></:item>
+  <:item title="Home">
+    <%= if !is_nil(@primary_home) do %>
+      <.link class="text-red-700 underline decoration-solid" navigate={~p"/homes/#{@primary_home.id}"}>
+        <%= @primary_home.home_name %></.link>
+    <% end %>
+  </:item>
+  <:item :if={!is_nil(@rental_homes)} title="Rental Home">
+      <%= for h <- @rental_homes do %>
+        <.link class="text-red-700" navigate={~p"/homes/#{h.id}"}>
+          <%= h.home_name %></.link>
+      <% end %>
+  </:item>
   <:item title="Mobile phone"><%= @phones.mobile %></:item>
   <:item title="Work phone"><%= @phones.work %></:item>
   <:item title="Home phone"><%= @phones.home %></:item>
@@ -23,7 +34,7 @@
   <%!-- <:item title="Email public"><%= @person.email_public %></:item> --%>
   <:item title="Age"><%= @age %></:item>
   <:item title="Home relationship"><%= @person.home_relationship %></:item>
-  <:item title="Mailing Address"><pre><%= @mailing_address %></pre></:item>
+  <:item title="Mailing address"><pre><%= @mailing_address %></pre></:item>
   <:item title="Bio"><%= @person.bio %></:item>
 </.list>
 
