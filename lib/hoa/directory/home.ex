@@ -1,9 +1,11 @@
 defmodule Hoa.Directory.Home do
   use Ecto.Schema
-  import Ecto.Query
   import Ecto.Changeset
   alias Hoa.Directory.{Person, Pet, HomePerson}
 
+  @required_fields ~w(home_name rental)a
+  @optional_fields ~w(lot_number)a
+  use Utils.SchemaUtils
 
   schema "homes" do
     field :home_name, :string
@@ -16,43 +18,12 @@ defmodule Hoa.Directory.Home do
     timestamps()
   end
 
-  @doc false
+
+
   def changeset(home, params \\ %{}) do
     home
-    |> cast(params, [ :home_name, :lot_number, :rental ])
-    |> validate_required([:home_name])
+    |> cast(params, fields(:all))
+    |> validate_required(fields(:required))
     |> unique_constraint(:home_name)
-    |> cast_assoc(:people)
-    |> cast_assoc(:pets)
-  end
-
-  defp base do
-    from _ in Hoa.Directory.Home, as: :home
-  end
-
-  def all(query \\ base()), do: query
-
-  def where_id(query \\ base(), id) do
-    from h in query,
-      where: h.id == ^id
-  end
-
-  def search(query \\ base(), opts \\ []) do
-    srch_params = Keyword.get(opts, :srch_params, [])
-      from e in query,
-      where: ^srch_params
-  end
-
-  @spec with_people(any()) :: Ecto.Query.t()
-  def with_people(query \\ base()) do
-    from e in query,
-      join: p in assoc(e, :people),
-      preload: [people: p]
-  end
-
-  def with_pets(query \\ base()) do
-    from e in query,
-      join: t in assoc(e, :pets),
-      preload: [pets: t]
   end
 end

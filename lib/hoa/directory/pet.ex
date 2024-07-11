@@ -6,14 +6,19 @@ defmodule Hoa.Directory.Pet do
   alias Hoa.Directory.Home
   import Date
 
+
+  @required_fields ~w(name breed weight coloring)a
+  @optional_fields ~w(type dob image_path)a
+  use Utils.SchemaUtils
+
   schema "pets" do
     field :name, :string
     field :type, Ecto.Enum, values: [:dog, :cat]
     field :breed, :string
+    field :coloring, :string
     field :dob, :date
     field :weight, :integer
     field :image_path, :string
-    field :delete, :boolean, virtual: true
     belongs_to :home, Home
 
     timestamps()
@@ -22,14 +27,12 @@ defmodule Hoa.Directory.Pet do
   @doc false
   def changeset(pet, params \\ %{}) do
     pet
-    |> cast(params, field_names())
-    |> validate_required([:name, :type, :breed])
+    |> cast(params, fields(:all))
+    |> validate_required(fields(:required))
     |> validate_number(:weight, greater_than: 0)
     |> validate_date_in_range(:dob, Date.add(utc_today(), -365 * 20), utc_today())
-    |> cast_assoc(:home, with: &Hoa.Directory.Home.changeset/2)
+    # |> cast_assoc(:home, with: &Hoa.Directory.Home.changeset/2)
   end
-
-  def field_names(),  do: [:name, :type, :breed, :image_path, :dob, :weight, :delete]
 
   defp base() do
     from _ in Hoa.Directory.Pet, as: :pet

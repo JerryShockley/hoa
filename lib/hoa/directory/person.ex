@@ -1,11 +1,17 @@
 defmodule Hoa.Directory.Person do
   use Ecto.Schema
-  import Ecto.Query
   import Ecto.Changeset
   alias Hoa.Directory.Home
   alias Hoa.Directory.HomePerson
   import Date
   import Utils.CustomValidations
+
+  @required_fields ~w(first_name last_name home_relationship)a
+  @optional_fields ~w(middle_name nickname name_suffix mobile_phone work_phone \
+    home_phone email mobile_phone_public work_phone_public home_phone_public \
+    email_public bio dob image_path mail_addressee street1 street2 city state \
+    postal_code country_code)a
+  use Utils.SchemaUtils
 
   schema "people" do
     field :first_name, :string
@@ -40,37 +46,8 @@ defmodule Hoa.Directory.Person do
   @doc false
   def changeset(person, params \\ %{}) do
     person
-    |> cast(params, [
-      :first_name,
-      :last_name,
-      :middle_name,
-      :nickname,
-      :name_suffix,
-      :mobile_phone,
-      :mobile_phone_public,
-      :work_phone,
-      :work_phone_public,
-      :home_phone,
-      :home_phone_public,
-      :email,
-      :email_public,
-      :bio,
-      :dob,
-      :home_relationship,
-      :image_path,
-      :mail_addressee,
-      :street1,
-      :street2,
-      :city,
-      :state,
-      :postal_code,
-      :country_code
-    ])
-    |> validate_required([
-      :first_name,
-      :last_name,
-      :home_relationship
-    ])
+    |> cast(params, fields(:all))
+    |> validate_required(fields(:required))
     |> update_change(:mobile_phone, &remove_phone_formatting/1)
     |> update_change(:work_phone, &remove_phone_formatting/1)
     |> update_change(:home_phone, &remove_phone_formatting/1)
@@ -95,86 +72,5 @@ defmodule Hoa.Directory.Person do
   end
 
   def remove_phone_formatting(_phone_str), do: nil
-
-  defp base do
-    from _ in Hoa.Directory.Person, as: :person
-  end
-
-
-  def all(query \\ base()) do
-    query
-    |> with_homes()
-  end
-
-
-  def where_id(query \\ base(), id) do
-    from e in query,
-      where: e.id == ^id
-  end
-  # def search(query \\ base() \\ base(), opts \\ []) do
-  #   srch_params = Keyword.get(opts, :srch_params, [])
-  #   query
-  #   |> where(^srch_params)
-  # end
-
-  # defp apply_joins(query \\ base(), joins) do
-  #   Enum.reduce(joins, query, fn e, q -> q |>
-  #     join(:left, [h], p in assoc(h, :people))
-  # end
-
-  # defp apply_preloads(query \\ base() \\ base(), preloads) do
-  #   query
-  #   |> from()
-  #   |> apply_joins()
-  # end
-
-  def with_homes(query \\ base()) do
-    from e in query,
-      join: h in assoc(e, :homes),
-      preload: :homes
-  end
-
-  # def select_detail(query \\ base() \\ base()) do
-  #   query
-  #   |> from()
-  #   |> select([p, h],
-  #             [h.home_name,
-  #             p.first_name,
-  #             p.nickname,
-  #             p.middle_name,
-  #             p.last_name,
-  #             p.name_suffix,
-  #             p.home_phone,
-  #             p.home_phone_public,
-  #             p.work_phone,
-  #             p.work_phone_public,
-  #             p.mobile_phone,
-  #             p.mobile_phone_public,
-  #             p.email,
-  #             p.email_public,
-  #             p.bio,
-  #             p.home_relationship,
-  #             p.street1,
-  #             p.street2,
-  #             p.city,
-  #             p.state,
-  #             p.postal_code,
-  #             p.country_code
-  #           ]
-  #             )
-  # end
-
-  # def select_list(query \\ base() \\ base()) do
-  #   query
-  #   |> from()
-  #   |> select([p, h],
-  #             [h.home_name,
-  #             p.first_name,
-  #             p.nickname,
-  #             p.last_name,
-  #             p.mobile_phone,
-  #             p.email]
-  #             )
-  # end
 
 end
