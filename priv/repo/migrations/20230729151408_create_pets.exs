@@ -6,6 +6,7 @@ defmodule Hoa.Repo.Migrations.CreatePets do
       add :name, :string
       add :type, :string
       add :breed, :string
+      add :coloring, :string
       add :weight, :integer
       add :dob, :date
       add :image_path, :string

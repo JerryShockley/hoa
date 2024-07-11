@@ -28,6 +28,7 @@ defmodule HoaWeb.PetLive.FormComponent do
           options={Ecto.Enum.values(Hoa.Directory.Pet, :type)}
         />
         <.input field={@form[:breed]} type="text" label="Breed" />
+        <.input field={@form[:coloring]} type="text" label="Coloring" />
         <.input field={@form[:weight]} type="number" label="Weight" />
         <.input field={@form[:dob]} type="date" label="Date" />
         <:actions>
