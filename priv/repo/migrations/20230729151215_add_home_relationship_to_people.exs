@@ -1,5 +1,5 @@
 defmodule Hoa.Repo.Migrations.AddHomeRelationshipToPeople do
-  @module_doc """
+  @docp """
   This module is created to enable db level checking of valid enum values.
   The SQL commands used here are specific to the Postgresql database (PSQL)
   and as such requires the use of PSQL.
